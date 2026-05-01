@@ -1,6 +1,7 @@
 package com.devconnect.controller;
 
 import com.devconnect.dto.UserRequestDTO;
+import com.devconnect.dto.UserResponseDTO;
 import com.devconnect.entity.User;
 import com.devconnect.service.UserService;
 import jakarta.validation.Valid;
@@ -18,7 +19,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User registerUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+    public UserResponseDTO registerUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         return userService.createUser(userRequestDTO);
     }
 }
