@@ -5,6 +5,7 @@ import com.devconnect.dto.UserRequestDTO;
 import com.devconnect.dto.UserResponseDTO;
 import com.devconnect.entity.User;
 import com.devconnect.repository.UserRepository;
+import com.devconnect.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,13 @@ public class UserService {
     }
 
     public String loginUser(LoginRequestDTO dto) {
-        User user = userRepository.findByUsername(dto.getUsername())
-                .orElseThrow(() -> new RuntimeException("Username not found"));
+        User user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("Email not found"));
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new RuntimeException("Wrong password");
         }
 
-        return "Login Successful";
+        return JwtUtil.generateToken(user.getEmail());
     }
 }
