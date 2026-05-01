@@ -1,7 +1,9 @@
 package com.devconnect.controller;
 
+import com.devconnect.dto.UserRequestDTO;
 import com.devconnect.entity.User;
 import com.devconnect.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +18,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User registerUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public User registerUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+        return userService.createUser(userRequestDTO);
     }
 }
