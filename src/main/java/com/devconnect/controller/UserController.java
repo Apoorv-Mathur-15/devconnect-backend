@@ -1,5 +1,6 @@
 package com.devconnect.controller;
 
+import com.devconnect.dto.LoginRequestDTO;
 import com.devconnect.dto.UserRequestDTO;
 import com.devconnect.dto.UserResponseDTO;
 import com.devconnect.entity.User;
@@ -21,5 +22,10 @@ public class UserController {
     @PostMapping
     public UserResponseDTO registerUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         return userService.createUser(userRequestDTO);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequestDTO dto) {
+        return userService.loginUser();
     }
 }

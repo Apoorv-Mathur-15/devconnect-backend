@@ -1,10 +1,12 @@
 package com.devconnect.service;
 
+import com.devconnect.dto.LoginRequestDTO;
 import com.devconnect.dto.UserRequestDTO;
 import com.devconnect.dto.UserResponseDTO;
 import com.devconnect.entity.User;
 import com.devconnect.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,10 +15,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public UserResponseDTO createUser(UserRequestDTO dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setEmail(dto.getEmail());
 
         User savedUser = userRepository.save(user);
@@ -27,5 +32,16 @@ public class UserService {
         response.setEmail(savedUser.getEmail());
 
         return response;
+    }
+
+    public String loginUser(LoginRequestDTO dto) {
+        User user = userRepository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new RuntimeException("Username not found"));
+
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Wrong password");
+        }
+
+        return "Login Successful";
     }
 }
