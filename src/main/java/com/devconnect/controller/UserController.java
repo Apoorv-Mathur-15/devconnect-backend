@@ -3,7 +3,6 @@ package com.devconnect.controller;
 import com.devconnect.dto.LoginRequestDTO;
 import com.devconnect.dto.UserRequestDTO;
 import com.devconnect.dto.UserResponseDTO;
-import com.devconnect.entity.User;
 import com.devconnect.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,6 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestBody LoginRequestDTO dto) {
-        return userService.loginUser();
+        return userService.loginUser(dto);
     }
 }
