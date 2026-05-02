@@ -24,6 +24,7 @@ public class UserService {
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setEmail(dto.getEmail());
+        user.setRole("ROLE_USER");
 
         User savedUser = userRepository.save(user);
 
@@ -43,6 +44,6 @@ public class UserService {
             throw new RuntimeException("Wrong password");
         }
 
-        return JwtUtil.generateToken(user.getEmail());
+        return JwtUtil.generateToken(user.getEmail(), user.getRole());
     }
 }

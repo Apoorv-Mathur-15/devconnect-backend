@@ -29,4 +29,9 @@ public class UserController {
     public String getProfiles() {
         return "Access grannted to protected endpoint!";
     }
+
+    @GetMapping("/admin/test")
+    public String adminOnly() {
+        return "Admin access granted!";
+    }
 }

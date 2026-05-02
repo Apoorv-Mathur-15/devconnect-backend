@@ -1,5 +1,6 @@
 package com.devconnect.security;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,9 +35,13 @@ public class JwtFilter extends OncePerRequestFilter {
             System.out.println("Extracted Token: " + token);
 
             try {
-                String email = JwtUtil.validateToken(token);
+                Claims claims = JwtUtil.validateToken(token);
+                String email = claims.getSubject();
+                String role = claims.get("role", String.class);
                 System.out.println("Authenticated user: " + email);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        email, null, List.of(new SimpleGrantedAuthority(role))
+                );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
