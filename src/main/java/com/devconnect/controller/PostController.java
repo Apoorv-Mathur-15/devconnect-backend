@@ -27,7 +27,7 @@ public class PostController {
     }
 
     @GetMapping("/me")
-    public Post getMyPosts() {
+    public List<Post> getMyPosts() {
         return postService.getMyPosts();
     }
 }
