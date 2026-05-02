@@ -6,10 +6,7 @@ import com.devconnect.dto.UserResponseDTO;
 import com.devconnect.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -26,5 +23,10 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestBody LoginRequestDTO dto) {
         return userService.loginUser(dto);
+    }
+
+    @GetMapping("/profiles")
+    public String getProfiles() {
+        return "Access grannted to protected endpoint!";
     }
 }
