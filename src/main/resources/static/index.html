@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DevConnect</title>
+</head>
+<body>
+
+<h2>Login</h2>
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<hr>
+
+<h2>Create Post</h2>
+<input id="postContent" type="text" placeholder="Write something...">
+<button onclick="createPost()">Post</button>
+
+<hr>
+
+<h2>All Posts</h2>
+<button onclick="getPosts()">Lost Posts</button>
+<ul id="posts"></ul>
+
+<script>
+    let token = "";
+
+    //Login
+    function login() {
+        fetch("/users/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            token = data.accessToken;
+            alert("Login successful!");
+        })
+            .catch(err => console.error(err));
+    }
+
+    //Create Post
+    function createPost() {
+        fetch("/posts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer" + token
+            },
+            body: document.getElementById("postContent").value
+        })
+        .then(res => res.json())
+            .then(data => {
+                alert("Post created successfully!");
+            })
+        .catch(err => console.error(err));
+    }
+
+    //Get Posts
+    function getPosts() {
+        fetch("/posts", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer" + token
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            let list = document.getElementById("posts");
+            list.innerHTML = "";
+
+            data.forEach((post) => {
+                let li = document.createElement("li");
+                li.innerHTML = post.content + " (" + post.authorEmail + ")";
+                list.appendChild(li);
+            });
+        })
+        .catch(err => console.error(err));
+    }
+</script>
+</body>
+</html>
