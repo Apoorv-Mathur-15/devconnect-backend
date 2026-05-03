@@ -23,7 +23,14 @@ public class JwtFilter extends OncePerRequestFilter {
         System.out.println("JWT Filter HIT for: " + request.getRequestURI());
 
         String path = request.getRequestURI();
-        if(path.equals("/users") || path.equals("/users/login")) {
+        if (
+                path.startsWith("/users") ||
+                        path.startsWith("/css") ||
+                        path.startsWith("/js") ||
+                        path.startsWith("/images") ||
+                        path.equals("/") ||
+                        path.equals("/index.html")
+        ) {
             filterChain.doFilter(request, response);
             return;
         }
