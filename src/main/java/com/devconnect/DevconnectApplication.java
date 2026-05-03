@@ -1,9 +1,11 @@
-package com;
+package com.devconnect;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
-@SpringBootApplication(scanBasePackages = "com.devconnect")
+@SpringBootApplication
+@EnableAsync
 public class DevconnectApplication {
 
 	public static void main(String[] args) {
