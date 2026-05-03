@@ -11,9 +11,11 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final AsyncService asyncService;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, AsyncService asyncService) {
         this.postRepository = postRepository;
+        this.asyncService = asyncService;
     }
 
     public Post createPost(String content) {
@@ -27,7 +29,11 @@ public class PostService {
                 .authorEmail(email)
                 .build();
 
-        return postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+
+        asyncService.processPostAsync(content, email);
+
+        return savedPost;
     }
 
     public List<Post> getAllPosts() {
