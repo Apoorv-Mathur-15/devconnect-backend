@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class PostService {
@@ -31,7 +32,12 @@ public class PostService {
 
         Post savedPost = postRepository.save(post);
 
-        asyncService.processPostAsync(content, email);
+        CompletableFuture<String> contentFuture = asyncService.processContent(content);
+        CompletableFuture<String> notificationFuture = asyncService.sendNotification(email);
+        CompletableFuture<String> analyticsFuture = asyncService.saveAnalytics(email);
+
+        CompletableFuture.allOf(contentFuture, notificationFuture, analyticsFuture)
+                .thenRun(() -> System.out.println("All async tasks completed"));
 
         return savedPost;
     }
