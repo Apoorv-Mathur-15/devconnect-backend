@@ -23,20 +23,21 @@ public class JwtFilter extends OncePerRequestFilter {
         System.out.println("JWT Filter HIT for: " + request.getRequestURI());
 
         String path = request.getRequestURI();
+
+        System.out.println(">>> JWT Filter UPDATED VERSION HIT for: " + path);
+
         if (
-                path.startsWith("/users") ||
-                        path.startsWith("/css") ||
-                        path.startsWith("/js") ||
-                        path.startsWith("/images") ||
-                        path.equals("/") ||
-                        path.equals("/index.html")
+                path.equals("/") ||
+                        path.equals("/index.html") ||
+                        path.startsWith("/users")
         ) {
+            System.out.println(">>> SKIPPING JWT FILTER FOR: " + path);
             filterChain.doFilter(request, response);
             return;
         }
 
         String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             System.out.println("Authorization Header: " + authHeader);
             System.out.println("Extracted Token: " + token);
@@ -55,6 +56,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
         }
+            else {
+                System.out.println("Authorization header check failed for: " + path);
+                System.out.println("Authorization Header present: " + authHeader);
+            }
         filterChain.doFilter(request, response);
     }
 }

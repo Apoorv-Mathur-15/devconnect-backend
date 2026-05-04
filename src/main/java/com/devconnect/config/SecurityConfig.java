@@ -34,9 +34,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/users", "/users/profiles", "/users/login").permitAll()
+                        .requestMatchers("/", "/index.html").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/static/**").permitAll()
-                        .requestMatchers("/users/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpbasic -> httpbasic.disable())

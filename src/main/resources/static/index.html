@@ -36,9 +36,11 @@
                 password: document.getElementById("password").value
             })
         })
-        .then(res => res.json())
+        .then(res => res.text())
         .then(data => {
-            token = data.accessToken;
+            //token = data.accessToken;
+            token = data;
+            console.log("Token: ", token);
             alert("Login successful!");
         })
             .catch(err => console.error(err));
@@ -54,8 +56,9 @@
             },
             body: document.getElementById("postContent").value
         })
-        .then(res => res.json())
+        .then(res => res.text())
             .then(data => {
+                console.log("Sending Token: ", token);
                 alert("Post created successfully!");
             })
         .catch(err => console.error(err));
@@ -66,19 +69,25 @@
         fetch("/posts", {
             method: "GET",
             headers: {
-                "Authorization": "Bearer" + token
+                "Authorization": "Bearer " + token
             }
         })
-        .then(res => res.json())
+        .then(res => res.text())
         .then(data => {
+            console.log("Posts response: ",data);
             let list = document.getElementById("posts");
             list.innerHTML = "";
 
-            data.forEach((post) => {
-                let li = document.createElement("li");
-                li.innerHTML = post.content + " (" + post.authorEmail + ")";
-                list.appendChild(li);
-            });
+            if(Array.isArray(data)) {
+                data.forEach((post) => {
+                    let li = document.createElement("li");
+                    li.innerText = post.content + " (" + post.authorEmail + ") ";
+                    list.appendChild(li);
+                });
+            }
+            else {
+                console.error("Expected array but got: ", data);
+            }
         })
         .catch(err => console.error(err));
     }
