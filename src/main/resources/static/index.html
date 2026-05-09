@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>DevConnect</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Login</h2>
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+<div class="container">
+    <h1>DevConnect</h1>
 
-<hr>
+    <h2>Login</h2>
 
-<h2>Create Post</h2>
-<input id="postContent" type="text" placeholder="Write something...">
-<button onclick="createPost()">Post</button>
+    <input id="email" type="email" placeholder="Enter Email">
+    <input id="password" type="password" placeholder="Enter Password">
 
-<hr>
+    <button onclick="login()">Login</button>
 
-<h2>All Posts</h2>
-<button onclick="getPosts()">Lost Posts</button>
-<ul id="posts"></ul>
+    <hr>
+
+    <h2>Create Post</h2>
+    <input id="postContent" type="text" placeholder="Express yourself...">
+    <button onclick="createPost()">Create Post</button>
+
+    <hr>
+
+    <h2>Posts Feed</h2>
+    <button onclick="getPosts()">Refresh Posts</button>
+    <ul id="posts"></ul>
+
+</div>
 
 <script>
     let token = "";
@@ -40,7 +47,9 @@
         .then(data => {
             //token = data.accessToken;
             token = data;
-            console.log("Token: ", token);
+
+            localStorage.setItem("jwtToken", token);
+
             alert("Login successful!");
         })
             .catch(err => console.error(err));
@@ -48,24 +57,30 @@
 
     //Create Post
     function createPost() {
+        token = localStorage.getItem("jwtToken");
+
         fetch("/posts", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "text/plain",
                 "Authorization": "Bearer" + token
             },
             body: document.getElementById("postContent").value
         })
-        .then(res => res.text())
+        .then(res => res.json())
             .then(data => {
-                console.log("Sending Token: ", token);
                 alert("Post created successfully!");
+                document.getElementById("postContent").value = "";
+
+                getPosts();
             })
         .catch(err => console.error(err));
     }
 
     //Get Posts
     function getPosts() {
+        token = localStorage.getItem("jwtToken");
+
         fetch("/posts", {
             method: "GET",
             headers: {
@@ -74,19 +89,22 @@
         })
         .then(res => res.json())
         .then(data => {
-            console.log("Type: ",typeof data);
-            console.log("Posts response: ",data);
-            let list = document.getElementById("posts");
-            list.innerHTML = "";
+            let postsDiv = document.getElementById("posts");
 
-            data.forEach(post  => {
-                let li = document.createElement("li");
-                li.innerText = post.content + " (" + post.authorEmail + " )";
-                list.appendChild(li);
+            postsDiv.innerHTML = "";
+
+            data.reverse().forEach(post => {
+                postsDiv.innerHTML += `
+                    <div class="post">
+                        <p>{post.content}</p>
+                        <p class="email">${post.authorEmail}</p>
+                    </div>
+                `;
             });
         })
         .catch(err => console.error(err));
     }
 </script>
+
 </body>
 </html>
