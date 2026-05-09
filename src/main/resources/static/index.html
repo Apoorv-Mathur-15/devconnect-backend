@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>DevConnect</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
@@ -63,7 +63,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "text/plain",
-                "Authorization": "Bearer" + token
+                "Authorization": "Bearer " + token
             },
             body: document.getElementById("postContent").value
         })
@@ -96,7 +96,7 @@
             data.reverse().forEach(post => {
                 postsDiv.innerHTML += `
                     <div class="post">
-                        <p>{post.content}</p>
+                        <p>${post.content}</p>
                         <p class="email">${post.authorEmail}</p>
                     </div>
                 `;
